@@ -1,0 +1,648 @@
+{% extends 'lib/base.html' %}
+{% load static %}
+{% block title %}Library - Home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'lib/home.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --primary: #0f172a;
+    --secondary: #1e293b;
+    --accent-teal: #14b8a6;
+    --accent-blue: #0ea5e9;
+    --light-bg: #f8fafc;
+    --border-light: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+    --white: #ffffff;
+  }
+
+  * {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ===== HERO SECTION ===== */
+  .hero-section {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #164e63 100%);
+    color: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    padding: 5rem 3rem;
+    margin-bottom: 5rem;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+  }
+
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-title {
+    font-weight: 800;
+    font-size: 3.2rem;
+    margin-bottom: 1.2rem;
+    line-height: 1.2;
+    letter-spacing: -0.5px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.95;
+    font-weight: 500;
+    color: #cffafe;
+  }
+
+  .hero-description {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 500px;
+  }
+
+  .hero-btn {
+    padding: 14px 36px;
+    font-size: 1rem;
+    border-radius: 50px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 24px rgba(20, 184, 166, 0.3);
+    background: var(--accent-teal);
+    color: var(--primary);
+    border: none;
+  }
+
+  .hero-btn:hover {
+    background: #0d9488;
+    box-shadow: 0 12px 32px rgba(20, 184, 166, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .hero-image {
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2));
+    border-radius: 16px;
+    object-fit: cover;
+  }
+
+  /* ===== FEATURE CARDS ===== */
+  .features-section {
+    margin-bottom: 5rem;
+  }
+
+  .feature-item {
+    padding: 2.5rem 2rem;
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .feature-item:hover {
+    box-shadow: 0 12px 32px rgba(20, 184, 166, 0.12);
+    border-color: var(--accent-teal);
+    transform: translateY(-4px);
+  }
+
+  .feature-icon {
+    font-size: 2.8rem;
+    color: var(--accent-teal);
+    margin-bottom: 1rem;
+    display: inline-block;
+  }
+
+  .feature-title {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+  }
+
+  .feature-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .section-title {
+    font-weight: 800;
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.3px;
+  }
+
+  .section-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    font-weight: 500;
+  }
+
+  /* ===== PRODUCT CARDS ===== */
+  .product-card {
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    background: var(--white);
+  }
+
+  .product-card:hover {
+    box-shadow: 0 16px 40px rgba(20, 184, 166, 0.15);
+    transform: translateY(-8px);
+    border-color: var(--accent-teal);
+  }
+
+  .product-img-container {
+    height: 220px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #f0fdf4 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--accent-teal);
+    color: var(--white);
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    z-index: 2;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .product-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    min-height: 2.4em;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .product-author {
+    color: var(--accent-teal);
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .product-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    flex-grow: 1;
+    margin-bottom: 1.2rem;
+  }
+
+  .product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .product-price {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent-teal);
+  }
+
+  .stock-badge {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #f0fdf4;
+    color: #166534;
+  }
+
+  .rating {
+    color: #fbbf24;
+    font-size: 0.9rem;
+  }
+
+  .card-footer {
+    padding: 1.5rem;
+    background: var(--light-bg);
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .btn-detail {
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: #f0f9ff;
+    color: var(--accent-blue);
+    border: 1px solid var(--accent-blue);
+    transition: all 0.3s ease;
+  }
+
+  .btn-detail:hover {
+    background: var(--accent-blue);
+    color: var(--white);
+  }
+
+  .btn-borrow {
+    padding: 10px 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: var(--accent-teal);
+    color: var(--white);
+    border: none;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  .btn-borrow:hover {
+    background: #0d9488;
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.3);
+  }
+
+  /* ===== CATEGORY CARDS ===== */
+  .category-card {
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    background: var(--white);
+    box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+
+  .category-card:hover {
+    box-shadow: 0 12px 32px rgba(20, 184, 166, 0.12);
+    border-color: var(--accent-teal);
+    transform: translateY(-4px);
+  }
+
+  .category-icon {
+    font-size: 2.8rem;
+    color: var(--accent-blue);
+    margin-bottom: 1rem;
+  }
+
+  .category-title {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--text-primary);
+    margin-bottom: 0.8rem;
+  }
+
+  .category-card .card-text {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .category-btn {
+    border-radius: 50px;
+    font-weight: 700;
+    padding: 10px 24px;
+    border: 2px solid var(--accent-teal);
+    color: var(--accent-teal);
+    background: transparent;
+    transition: all 0.3s ease;
+  }
+
+  .category-btn:hover {
+    background: var(--accent-teal);
+    color: var(--white);
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.3);
+  }
+
+  /* ===== NEWSLETTER SECTION ===== */
+  .newsletter-section {
+    background: linear-gradient(135deg, #0f172a 0%, #164e63 100%);
+    border-radius: 20px;
+    padding: 4rem 3rem;
+    text-align: center;
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.15);
+    margin-top: 5rem;
+    color: var(--white);
+  }
+
+  .newsletter-title {
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .newsletter-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    color: #cffafe;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .newsletter-form input {
+    padding: 14px 24px;
+    border-radius: 50px 0 0 50px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    font-size: 0.95rem;
+    flex: 1;
+    min-width: 200px;
+    transition: all 0.3s ease;
+  }
+
+  .newsletter-form input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .newsletter-form input:focus {
+    outline: none;
+    border-color: var(--accent-teal);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .newsletter-form button {
+    padding: 14px 32px;
+    border-radius: 0 50px 50px 0;
+    border: none;
+    background: var(--accent-teal);
+    color: var(--white);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+  }
+
+  .newsletter-form button:hover {
+    background: #0d9488;
+    box-shadow: 0 8px 20px rgba(20, 184, 166, 0.4);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 992px) {
+    .hero-title {
+      font-size: 2.2rem;
+    }
+    .hero-subtitle {
+      font-size: 1.1rem;
+    }
+    .hero-section {
+      padding: 3rem 2rem;
+      margin-bottom: 3rem;
+    }
+    .section-title {
+      font-size: 1.8rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: 2.5rem 1.5rem;
+    }
+    .hero-title {
+      font-size: 1.8rem;
+    }
+    .section-title {
+      font-size: 1.5rem;
+    }
+    .newsletter-form {
+      flex-direction: column;
+    }
+    .newsletter-form input {
+      border-radius: 50px;
+    }
+    .newsletter-form button {
+      border-radius: 50px;
+      width: 100%;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO SECTION ===== -->
+<div class="hero-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 hero-content">
+        <h1 class="hero-title"><i class="fas fa-book-reader me-2"></i>Welcome to the Library</h1>
+        <p class="hero-subtitle">Discover thousands of books waiting for you</p>
+        <p class="hero-description">Find and borrow from our extensive academic and general book catalog. Curated collections organized by department, level, and term for every learner.</p>
+        <a class="btn hero-btn" href="{% url 'lib:book_list' %}">
+          <i class="fas fa-search me-2"></i>Start Exploring
+        </a>
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-center">
+        <img src="{% static 'cuet2.jpeg' %}" alt="Library Collection" class="img-fluid hero-image">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FEATURES SECTION ===== -->
+<div class="container features-section">
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-user-friends"></i></div>
+        <h3 class="feature-title">Member-Only Borrowing</h3>
+        <p class="feature-desc">Members can request, borrow, and manage returns of books with our easy-to-use dashboard.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-sitemap"></i></div>
+        <h3 class="feature-title">Smart Organization</h3>
+        <p class="feature-desc">Academic books organized by department, level, and term for quick and convenient browsing.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3 class="feature-title">Fast & Secure</h3>
+        <p class="feature-desc">Search and borrow with secure authentication and real-time dashboard tracking for peace of mind.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FEATURED BOOKS SECTION ===== -->
+<div class="container mb-5">
+  <div class="section-header">
+    <h2 class="section-title">Featured Books</h2>
+    <p class="section-subtitle">Hand-picked titles students are reading right now</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    {% for book in featured_books %}
+      <div class="col">
+        <div class="card h-100 product-card">
+          {% if book.image %}
+            <div class="product-img-container">
+              <img src="{{ book.image.url }}" class="product-img" alt="{{ book.title }}">
+              <span class="product-badge">Featured</span>
+            </div>
+          {% else %}
+            <div class="product-img-container">
+              <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center" style="color: var(--text-secondary);">
+                <i class="fas fa-book fa-3x mb-2"></i>
+                <span class="small">No cover image</span>
+              </div>
+            </div>
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="product-title">{{ book.title|truncatechars:40 }}</h5>
+            <p class="product-author"><i class="fas fa-pen me-1"></i>{{ book.author|default:"Unknown Author" }}</p>
+            <p class="product-desc">{{ book.description|truncatechars:80 }}</p>
+
+            <div class="product-meta">
+              <div>
+                <div class="product-price">৳{{ book.price }}</div>
+                <div class="stock-badge">
+                  {% if book.stock > 0 %}
+                    <i class="fas fa-check-circle me-1"></i>In Stock
+                  {% else %}
+                    <span style="color: #dc2626;">Out of Stock</span>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="rating">
+                {% with stars=book.average_rating|default:0 %}
+                  {% for i in "12345" %}
+                    {% if forloop.counter <= stars %}
+                      <i class="fas fa-star"></i>
+                    {% else %}
+                      <i class="far fa-star"></i>
+                    {% endif %}
+                  {% endfor %}
+                  <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem;">{{ stars|floatformat:1 }}/5</div>
+                {% endwith %}
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <a href="{% url 'lib:book_detail' book.slug %}" class="btn btn-detail w-100">
+              <i class="fas fa-eye me-1"></i>View Details
+            </a>
+            {% if member_active %}
+              <form action="{% url 'lib:borrow_book' book.id %}" method="post" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-borrow">
+                  <i class="fas fa-book-reader me-1"></i>Borrow Now
+                </button>
+              </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info border-0" style="background: #f0fdf4; color: #166534; border-radius: 12px;">
+          <i class="fas fa-info-circle me-2"></i>No featured books available at the moment.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ===== CATEGORIES SECTION ===== -->
+<div class="container my-5">
+  <div class="section-header">
+    <h2 class="section-title">Browse by Category</h2>
+    <p class="section-subtitle">Explore books by subject, genre, or field of study</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for category in categories %}
+      <div class="col">
+        <div class="card h-100 category-card">
+          <div class="card-body text-center py-5">
+            <div class="category-icon">
+              <i class="fas fa-{% if category.name == 'Academic' %}graduation-cap{% elif category.name == 'History' %}landmark{% elif category.name == 'Religious' %}church{% elif category.name == 'Science' %}microscope{% elif category.name == 'Fiction' %}book-open{% else %}book{% endif %}"></i>
+            </div>
+            <h3 class="category-title">{{ category.name }}</h3>
+            <p class="card-text">{{ category.description|truncatechars:80 }}</p>
+            <a href="{% url 'lib:book_list_by_category' category.slug %}" class="btn category-btn mt-3">
+              Explore <i class="fas fa-arrow-right ms-1"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info border-0" style="background: #f0fdf4; color: #166534; border-radius: 12px;">
+          <i class="fas fa-info-circle me-2"></i>No categories available at the moment.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- ===== NEWSLETTER SECTION ===== -->
+<div class="container mb-5">
+  <div class="newsletter-section">
+    <h3 class="newsletter-title">Never Miss a New Addition</h3>
+    <p class="newsletter-subtitle">Subscribe to get notified about new books, events, and exclusive library offers</p>
+    <form class="newsletter-form">
+      <input type="email" placeholder="Enter your email address" required>
+      <button type="submit">
+        <i class="fas fa-paper-plane me-2"></i>Subscribe
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

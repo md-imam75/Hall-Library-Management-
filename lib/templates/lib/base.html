@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}University Library{% endblock %}</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    {% load static %} {% block extra_css %}{% endblock %}
+
+    <style>
+      :root {
+        --primary-blue: #003d7a;
+        --primary-dark: #002d5c;
+        --teal-accent: #00a8a8;
+        --teal-light: #e6f7f7;
+        --dark-text: #1a1a1a;
+        --text-light: #6c757d;
+        --light-gray: #f8f9fa;
+        --border-color: #e0e0e0;
+        --shadow-light: 0 2px 8px rgba(0, 61, 122, 0.08);
+        --shadow-med: 0 4px 16px rgba(0, 61, 122, 0.12);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Poppins', sans-serif;
+        color: var(--dark-text);
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background: var(--light-gray);
+      }
+
+      main {
+        flex: 1;
+      }
+
+      /* NAVBAR STYLES */
+      .navbar {
+        background: white;
+        box-shadow: var(--shadow-light);
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.4rem;
+        color: var(--primary-blue) !important;
+        letter-spacing: -0.5px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .navbar-brand i {
+        color: var(--teal-accent);
+        font-size: 1.6rem;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        padding: 0.5rem 1rem !important;
+        color: var(--dark-text) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .nav-link:hover,
+      .nav-link.active {
+        color: var(--teal-accent) !important;
+      }
+
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        right: 1rem;
+        height: 2px;
+        background: var(--teal-accent);
+        transform: scaleX(0);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        transform: scaleX(1);
+      }
+
+      /* Search Box */
+      .search-box {
+        display: flex;
+        gap: 8px;
+      }
+
+      .search-input {
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        border: 1.5px solid var(--border-color);
+        font-size: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        background: #fafbfc;
+      }
+
+      .search-input:focus {
+        outline: none;
+        border-color: var(--teal-accent);
+        background: white;
+        box-shadow: 0 0 0 3px rgba(0, 168, 168, 0.1);
+      }
+
+      .search-btn {
+        border-radius: 8px;
+        background-color: var(--teal-accent);
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+      }
+
+      .search-btn:hover {
+        background-color: var(--primary-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 61, 122, 0.2);
+      }
+
+      /* Buttons */
+      .btn-outline-primary {
+        border: 1.5px solid var(--primary-blue);
+        color: var(--primary-blue);
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .btn-outline-primary:hover {
+        background-color: var(--primary-blue);
+        color: white;
+        border-color: var(--primary-blue);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 61, 122, 0.2);
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal-accent) 100%);
+        border: none;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 61, 122, 0.3);
+      }
+
+      /* Dropdown Menu */
+      .dropdown-menu {
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: var(--shadow-med);
+        padding: 0.5rem 0;
+      }
+
+      .dropdown-item {
+        padding: 0.75rem 1rem;
+        color: var(--dark-text);
+        font-weight: 500;
+        transition: all 0.2s;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--teal-light);
+        color: var(--teal-accent);
+      }
+
+      .dropdown-item i {
+        color: var(--teal-accent);
+        margin-right: 0.75rem;
+      }
+
+      /* Messages/Alerts */
+      .alert {
+        border-radius: 12px;
+        box-shadow: var(--shadow-light);
+        border: none;
+        padding: 1rem 1.5rem;
+        font-weight: 500;
+      }
+
+      .alert-success {
+        background-color: #e6f9ec;
+        color: #00a84d;
+      }
+
+      .alert-info {
+        background-color: var(--teal-light);
+        color: var(--teal-accent);
+      }
+
+      .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .alert-error {
+        background-color: #ffe6e6;
+        color: #d32f2f;
+      }
+
+      /* FOOTER STYLES */
+      footer {
+        background: white;
+        padding: 4rem 0 2rem;
+        margin-top: 5rem;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+        border-top: 1px solid var(--border-color);
+      }
+
+      footer h5 {
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--primary-blue);
+        font-size: 1rem;
+        letter-spacing: -0.3px;
+      }
+
+      footer p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      footer a {
+        color: var(--text-light);
+        text-decoration: none;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      footer a:hover {
+        color: var(--teal-accent);
+      }
+
+      .social-icons {
+        display: flex;
+        gap: 0.75rem;
+      }
+
+      .social-icons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: var(--teal-light);
+        color: var(--teal-accent);
+        border-radius: 8px;
+        font-size: 1.1rem;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .social-icons a:hover {
+        background-color: var(--teal-accent);
+        color: white;
+        transform: translateY(-3px);
+      }
+
+      .footer-divider {
+        height: 1px;
+        background: var(--border-color);
+        margin: 2rem 0;
+      }
+
+      .footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .footer-links a {
+        font-size: 0.9rem;
+      }
+
+      /* Contact Info Icons */
+      footer i {
+        color: var(--teal-accent);
+        width: 20px;
+      }
+
+      /* Responsive */
+      @media (max-width: 991px) {
+        .navbar {
+          padding: 0.75rem 0;
+        }
+
+        .search-box {
+          margin-top: 1rem;
+          width: 100%;
+        }
+
+        .search-input {
+          flex: 1;
+        }
+
+        .nav-link {
+          padding: 0.75rem 0 !important;
+          border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-link::after {
+          display: none;
+        }
+
+        .navbar-nav {
+          padding-top: 1rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .footer-bottom {
+          flex-direction: column;
+          text-align: center;
+        }
+
+        .footer-links {
+          justify-content: center;
+        }
+
+        footer h5 {
+          margin-top: 1.5rem;
+        }
+
+        footer h5:first-child {
+          margin-top: 0;
+        }
+      }
+
+      /* Related book card hover effect */
+      .related-book-card {
+        transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+      }
+
+      .related-book-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+      }
+
+      /* Color subtle backgrounds */
+      .bg-success-subtle {
+        background-color: #e6f9ec;
+      }
+
+      .bg-primary-subtle {
+        background-color: var(--teal-light);
+      }
+
+      .bg-secondary-subtle {
+        background-color: #f2f2f2;
+      }
+
+      /* Modern Chatbot Widget Styles */
+      .chatbot-widget {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        font-family: 'Poppins', sans-serif;
+      }
+
+      .chatbot-window {
+        display: none;
+        flex-direction: column;
+        width: 380px;
+        height: 520px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 61, 122, 0.2), 0 0 0 1px rgba(0, 61, 122, 0.05);
+        overflow: hidden;
+        animation: chatSlideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .chatbot-window.active {
+        display: flex;
+      }
+
+      @keyframes chatSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .chatbot-header {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal-accent) 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .chatbot-header-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .chatbot-avatar {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+      }
+
+      .chatbot-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 2px;
+      }
+
+      .chatbot-subtitle {
+        font-size: 0.8rem;
+        opacity: 0.9;
+      }
+
+      .chatbot-status {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        margin-top: 4px;
+      }
+
+      .chatbot-status-dot {
+        width: 8px;
+        height: 8px;
+        background: #4ade80;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .chatbot-close {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        transition: all 0.2s;
+      }
+
+      .chatbot-close:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+      }
+
+      .chatbot-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+      }
+
+      .chatbot-messages::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .chatbot-messages::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .chatbot-messages::-webkit-scrollbar-thumb {
+        background: var(--border-color);
+        border-radius: 3px;
+      }
+
+      .chat-message {
+        margin-bottom: 16px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-message.user {
+        align-items: flex-end;
+      }
+
+      .chat-message.bot {
+        align-items: flex-start;
+      }
+
+      .chat-bubble {
+        max-width: 85%;
+        padding: 12px 16px;
+        border-radius: 16px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        position: relative;
+      }
+
+      .chat-message.user .chat-bubble {
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal-accent) 100%);
+        color: white;
+        border-bottom-right-radius: 4px;
+      }
+
+      .chat-message.bot .chat-bubble {
+        background: white;
+        color: var(--dark-text);
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      }
+
+      .chat-time {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        margin-top: 4px;
+        padding: 0 4px;
+      }
+
+      .chatbot-form {
+        padding: 16px 20px;
+        background: white;
+        border-top: 1px solid var(--border-color);
+      }
+
+      .chatbot-input-wrapper {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .chatbot-input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        font-size: 0.9rem;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.3s;
+        background: var(--light-gray);
+      }
+
+      .chatbot-input:focus {
+        outline: none;
+        border-color: var(--teal-accent);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(0, 168, 168, 0.1);
+      }
+
+      .chatbot-input::placeholder {
+        color: var(--text-light);
+      }
+
+      .chatbot-send {
+        width: 46px;
+        height: 46px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal-accent) 100%);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        transition: all 0.3s;
+        flex-shrink: 0;
+      }
+
+      .chatbot-send:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0, 61, 122, 0.3);
+      }
+
+      .chatbot-send:active {
+        transform: scale(0.95);
+      }
+
+      .chatbot-toggle {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        border: none;
+        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal-accent) 100%);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 6px 25px rgba(0, 61, 122, 0.35);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .chatbot-toggle::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, var(--teal-accent) 0%, var(--primary-blue) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .chatbot-toggle:hover::before {
+        opacity: 1;
+      }
+
+      .chatbot-toggle:hover {
+        transform: scale(1.08) translateY(-2px);
+        box-shadow: 0 10px 35px rgba(0, 61, 122, 0.4);
+      }
+
+      .chatbot-toggle i {
+        position: relative;
+        z-index: 1;
+      }
+
+      .chatbot-toggle.hidden {
+        display: none;
+      }
+
+      .chatbot-badge {
+        position: absolute;
+        top: -4px;
+        right: -4px;
+        width: 18px;
+        height: 18px;
+        background: #ef4444;
+        border-radius: 50%;
+        border: 2px solid white;
+        z-index: 2;
+      }
+
+      .typing-indicator {
+        display: flex;
+        gap: 4px;
+        padding: 12px 16px;
+        background: white;
+        border-radius: 16px;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        width: fit-content;
+      }
+
+      .typing-indicator span {
+        width: 8px;
+        height: 8px;
+        background: var(--teal-accent);
+        border-radius: 50%;
+        animation: typing 1.4s infinite;
+      }
+
+      .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      @keyframes typing {
+        0%, 60%, 100% {
+          transform: translateY(0);
+          opacity: 0.4;
+        }
+        30% {
+          transform: translateY(-8px);
+          opacity: 1;
+        }
+      }
+
+      /* Mobile responsiveness for chatbot */
+      @media (max-width: 480px) {
+        .chatbot-widget {
+          bottom: 16px;
+          right: 16px;
+          left: 16px;
+        }
+
+        .chatbot-window {
+          width: 100%;
+          height: 70vh;
+          border-radius: 16px;
+        }
+
+        .chatbot-toggle {
+          position: fixed;
+          bottom: 16px;
+          right: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar navbar-expand-lg">
+        <div class="container">
+          <a class="navbar-brand" href="{% url 'lib:home' %}">
+            <i class="fas fa-book-reader"></i>Muktijoddha Hall Library
+          </a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a
+                  class="nav-link {% if request.path == '/' %}active{% endif %}"
+                  href="{% url 'lib:home' %}"
+                >
+                  Home
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link {% if '/books/' in request.path %}active{% endif %}"
+                  href="{% url 'lib:book_list' %}"
+                >
+                  Books
+                </a>
+              </li>
+              {% if user.is_authenticated and not user.is_staff %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'lib:membership' %}">
+                  Membership
+                </a>
+              </li>
+              {% endif %} {% if user.is_staff %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'lib:librarian_dashboard' %}">
+                  Librarian Panel
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'lib:users_overview' %}">
+                  Users
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+
+            <form
+              class="d-flex search-box me-3"
+              action="{% url 'lib:book_list' %}"
+              method="get"
+            >
+              <input
+                class="form-control search-input me-2"
+                type="search"
+                name="search"
+                placeholder="Search books..."
+                aria-label="Search"
+              />
+              <button class="btn search-btn" type="submit">
+                <i class="fas fa-search"></i>
+              </button>
+            </form>
+
+            <ul class="navbar-nav">
+              {% if user.is_authenticated %}
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle"
+                  href="#"
+                  id="navbarDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                </a>
+                <ul
+                  class="dropdown-menu dropdown-menu-end"
+                  aria-labelledby="navbarDropdown"
+                >
+                  <li>
+                    <a class="dropdown-item" href="{% url 'lib:my_profile' %}">
+                      <i class="fas fa-id-card"></i> My Profile
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="{% url 'lib:student_dashboard' %}"
+                    >
+                      <i class="fas fa-user"></i> My Dashboard
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="{% url 'lib:logout' %}">
+                      <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                  </li>
+                </ul>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a
+                  class="nav-link btn btn-outline-primary ms-2 px-3"
+                  href="{% url 'lib:login' %}"
+                >
+                  <i class="fas fa-sign-in-alt me-1"></i> Login
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link btn btn-primary ms-2 px-3 text-white"
+                  href="{% url 'lib:register' %}"
+                >
+                  <i class="fas fa-user-plus me-1"></i> Register
+                </a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container my-4">
+      {% if messages %}
+      <div class="messages mb-4">
+        {% for message in messages %}
+        <div
+          class="alert alert-{{ message.tags }} alert-dismissible fade show"
+          role="alert"
+        >
+          {% if message.tags == 'success' %}
+          <i class="fas fa-check-circle me-2"></i>
+          {% elif message.tags == 'info' %}
+          <i class="fas fa-info-circle me-2"></i>
+          {% elif message.tags == 'warning' %}
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          {% elif message.tags == 'error' %}
+          <i class="fas fa-times-circle me-2"></i>
+          {% endif %} {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}{% endblock %}
+    </main>
+
+    <!-- Modern Chatbot Widget -->
+    {% if request.user.is_authenticated %}
+    <div class="chatbot-widget" id="chatbot-widget">
+      <!-- Chatbot Window -->
+      <div class="chatbot-window" id="chatbot-window">
+        <div class="chatbot-header">
+          <div class="chatbot-header-info">
+            <div class="chatbot-avatar">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div>
+              <div class="chatbot-title">Library Assistant</div>
+              <div class="chatbot-subtitle">Ask about membership, fines, books</div>
+              <div class="chatbot-status">
+                <span class="chatbot-status-dot"></span>
+                Online
+              </div>
+            </div>
+          </div>
+          <button class="chatbot-close" id="chatbot-close" aria-label="Close chat">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <div class="chatbot-messages" id="chatbot-messages">
+          <div class="chat-message bot">
+            <div class="chat-bubble">
+              Hi {{ request.user.username }}! I'm your library assistant. You can ask me about membership status, fines, book availability, and more. How can I help you today?
+            </div>
+            <span class="chat-time">Just now</span>
+          </div>
+        </div>
+
+        <form class="chatbot-form" id="chatbot-form">
+          {% csrf_token %}
+          <div class="chatbot-input-wrapper">
+            <input
+              type="text"
+              class="chatbot-input"
+              id="chatbot-input"
+              name="message"
+              placeholder="Type your question..."
+              autocomplete="off"
+            />
+            <button type="submit" class="chatbot-send" aria-label="Send message">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Floating Toggle Button -->
+      <button class="chatbot-toggle" id="chatbot-toggle" aria-label="Open chat">
+        <i class="fas fa-comment-dots"></i>
+      </button>
+    </div>
+    {% endif %}
+
+    <footer>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-4 mb-md-0">
+            <h5>About Library</h5>
+            <p>
+              Welcome to the Hall Library online portal. Borrow, browse, and
+              rate academic and general books with ease. Your gateway to
+              knowledge and learning.
+            </p>
+          </div>
+          <div class="col-md-4 mb-4 mb-md-0">
+            <h5>Contact Us</h5>
+            <p>
+              <i class="fas fa-envelope"></i>
+              library@university.edu<br />
+              <i class="fas fa-phone"></i> +880 1234-567890<br />
+              <i class="fas fa-map-marker-alt"></i> CUET, Chattogram 4349
+            </p>
+          </div>
+          <div class="col-md-4">
+            <h5>Stay Connected</h5>
+            <div class="social-icons mb-3">
+              <a href="#" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a href="#" title="Twitter">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a href="#" title="Instagram">
+                <i class="fab fa-instagram"></i>
+              </a>
+              <a href="#" title="LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+            </div>
+            <p>Subscribe to our newsletter for new arrivals and announcements.</p>
+          </div>
+        </div>
+
+        <div class="footer-divider"></div>
+
+        <div class="footer-bottom">
+          <p class="mb-0">
+            &copy; {% now "Y" %} University Library. All rights reserved.
+          </p>
+          <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">FAQ</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chatbot JavaScript -->
+    {% if request.user.is_authenticated %}
+    <script>
+      (function() {
+        const toggleBtn = document.getElementById("chatbot-toggle");
+        const windowEl = document.getElementById("chatbot-window");
+        const closeBtn = document.getElementById("chatbot-close");
+        const form = document.getElementById("chatbot-form");
+        const input = document.getElementById("chatbot-input");
+        const messages = document.getElementById("chatbot-messages");
+
+        if (!toggleBtn || !windowEl) return;
+
+        // Toggle chatbot window
+        toggleBtn.addEventListener("click", function() {
+          windowEl.classList.add("active");
+          toggleBtn.classList.add("hidden");
+          input.focus();
+        });
+
+        // Close chatbot window
+        closeBtn.addEventListener("click", function() {
+          windowEl.classList.remove("active");
+          toggleBtn.classList.remove("hidden");
+        });
+
+        // Get current time formatted
+        function getTime() {
+          return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Append message to chat
+        function appendMessage(text, sender) {
+          const wrapper = document.createElement("div");
+          wrapper.className = "chat-message " + sender;
+
+          const bubble = document.createElement("div");
+          bubble.className = "chat-bubble";
+          bubble.textContent = text;
+
+          const time = document.createElement("span");
+          time.className = "chat-time";
+          time.textContent = getTime();
+
+          wrapper.appendChild(bubble);
+          wrapper.appendChild(time);
+          messages.appendChild(wrapper);
+          messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Show typing indicator
+        function showTyping() {
+          const wrapper = document.createElement("div");
+          wrapper.className = "chat-message bot";
+          wrapper.id = "typing-indicator";
+
+          const typing = document.createElement("div");
+          typing.className = "typing-indicator";
+          typing.innerHTML = "<span></span><span></span><span></span>";
+
+          wrapper.appendChild(typing);
+          messages.appendChild(wrapper);
+          messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Remove typing indicator
+        function hideTyping() {
+          const typing = document.getElementById("typing-indicator");
+          if (typing) typing.remove();
+        }
+
+        // Handle form submission
+        form.addEventListener("submit", function(e) {
+          e.preventDefault();
+          const text = input.value.trim();
+          if (!text) return;
+
+          appendMessage(text, "user");
+          input.value = "";
+
+          // Show typing indicator
+          showTyping();
+
+          const formData = new FormData(form);
+          formData.set("message", text);
+
+          fetch("{% url 'lib:chat_api' %}", {
+            method: "POST",
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+            body: formData
+          })
+          .then(resp => resp.json())
+          .then(data => {
+            hideTyping();
+            if (data.reply) {
+              appendMessage(data.reply, "bot");
+            } else {
+              appendMessage("Sorry, I could not understand the response.", "bot");
+            }
+          })
+          .catch(() => {
+            hideTyping();
+            appendMessage("Error contacting the server. Please try again.", "bot");
+          });
+        });
+
+        // Close on Escape key
+        document.addEventListener("keydown", function(e) {
+          if (e.key === "Escape" && windowEl.classList.contains("active")) {
+            windowEl.classList.remove("active");
+            toggleBtn.classList.remove("hidden");
+          }
+        });
+      })();
+    </script>
+    {% endif %}
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

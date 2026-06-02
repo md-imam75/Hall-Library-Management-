@@ -1,0 +1,8 @@
+{% extends 'lib/base.html' %}
+{% block content %}
+<h2>Rate Book: {{ book.title }}</h2>
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="btn btn-warning">Submit Rating</button>
+</form>
+{% endblock %}

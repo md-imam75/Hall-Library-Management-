@@ -1,0 +1,16 @@
+# Django local tracking elements
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+
+# Development environments
+.env
+.venv/
+env/
+venv/
+
+# IDE config files
+.vscode/
+.idea/

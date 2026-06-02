@@ -1,0 +1,344 @@
+{% extends 'lib/base.html' %}
+{% block title %}{{ student.username }} - History{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+    --primary-blue: #0f172a;
+    --secondary-blue: #1e293b;
+    --teal-accent: #14b8a6;
+    --light-teal: #5eead4;
+    --card-bg: #ffffff;
+    --text-primary: #0f172a;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+  }
+
+  .history-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 50%, #0d3d4d 100%);
+    padding: 40px 20px;
+  }
+
+  .history-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .page-header h2 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--teal-accent), var(--light-teal));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: white;
+    font-weight: 700;
+  }
+
+  .fine-info {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.95rem;
+    margin-top: 8px;
+  }
+
+  .fine-danger {
+    color: #f87171;
+    font-weight: 600;
+  }
+
+  .fine-success {
+    color: #34d399;
+    font-weight: 600;
+  }
+
+  .btn-back {
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-back:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transform: translateX(-3px);
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .stat-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 25px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--teal-accent), var(--light-teal));
+  }
+
+  .stat-card h6 {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+
+  .stat-card .stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-blue), var(--teal-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-card .stat-sub {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 5px;
+  }
+
+  .table-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    overflow: hidden;
+  }
+
+  .table-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    padding: 20px 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .table-header-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--teal-accent), var(--light-teal));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .table-header-icon i {
+    color: white;
+    font-size: 1.2rem;
+  }
+
+  .table-header h5 {
+    color: white;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .history-table thead {
+    background: #f8fafc;
+  }
+
+  .history-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .history-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+  }
+
+  .history-table tbody tr {
+    transition: all 0.3s ease;
+  }
+
+  .history-table tbody tr:hover {
+    background: #f1f5f9;
+  }
+
+  .book-title {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .date-text {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .badge-status {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+
+  @media (max-width: 768px) {
+    .page-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .history-table {
+      display: block;
+      overflow-x: auto;
+    }
+  }
+</style>
+
+<div class="history-page">
+  <div class="history-container">
+    <div class="page-header">
+      <div>
+        <h2>
+          <div class="user-avatar">{{ student.username|slice:":1"|upper }}</div>
+          {{ student.username }}'s Borrow History
+        </h2>
+        {% if membership %}
+          <div class="fine-info">
+            Outstanding fine: 
+            {% if membership.fine_balance > 0 %}
+              <span class="fine-danger">৳{{ membership.fine_balance }}</span>
+            {% else %}
+              <span class="fine-success">No dues</span>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+      <a href="{% url 'lib:librarian_dashboard' %}" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h6>Total Requests</h6>
+        <div class="stat-value">{{ total_requests }}</div>
+      </div>
+      <div class="stat-card">
+        <h6>Returned</h6>
+        <div class="stat-value">{{ returned_count }}</div>
+        <div class="stat-sub">{{ returned_pct }}% of all requests</div>
+      </div>
+      <div class="stat-card">
+        <h6>Returned In Time</h6>
+        <div class="stat-value">{{ in_time_count }}</div>
+        <div class="stat-sub">{{ in_time_pct }}% of returned</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-header">
+        <div class="table-header-icon">
+          <i class="fas fa-history"></i>
+        </div>
+        <h5>Borrow Records</h5>
+      </div>
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Book</th>
+            <th>Status</th>
+            <th>Requested</th>
+            <th>Returned</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for br in history %}
+            <tr>
+              <td><span class="book-title">{{ br.book.title }}</span></td>
+              <td><span class="badge-status">{{ br.get_status_display }}</span></td>
+              <td><span class="date-text">{{ br.request_date|date:"Y-m-d H:i" }}</span></td>
+              <td>
+                {% if br.status == 'returned' and br.return_date %}
+                  <span class="date-text">{{ br.return_date|date:"Y-m-d H:i" }}</span>
+                {% else %}
+                  <span class="date-text">—</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4">
+                <div class="empty-state">
+                  <i class="fas fa-book-open"></i>
+                  <p>No borrow history yet.</p>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

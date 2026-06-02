@@ -14,7 +14,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'a-safe-local-development-dummy-key')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # Allow local addresses and Render domains
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.onrender.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'hall-library-management-system.onrender.com']
 
 
 # Application definition
@@ -71,7 +71,7 @@ WSGI_APPLICATION = 'libraryBorrow.wsgi.application'
 # Uses PostgreSQL on Render via DATABASE_URL environment variable, falls back to local SQLite
 DATABASES = {
     'default': dj_database_url.config(
-        default=f'sqlite:///{BASE_DIR / "db.sqlite3"}',
+        default='sqlite:///' + os.path.join(str(BASE_DIR), 'db.sqlite3'),
         conn_max_age=600
     )
 }
